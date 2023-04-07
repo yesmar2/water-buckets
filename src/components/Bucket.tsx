@@ -3,22 +3,37 @@ import styled from 'styled-components';
 interface BucketProps {
   size: number;
   fill: number;
+  height: string;
+  width: string;
+  containerHeight: string;
+}
+
+interface BucketContainerProps {
+  height: string;
+}
+
+interface BucketStyledProps {
+  height: string;
+  width: string;
 }
 
 interface BucketFillProps {
-  height: number;
+  height: string;
 }
 
-const BucketSizeText = styled.p`
-  text-align: center;
+const BucketContainer = styled.div<BucketContainerProps>`
+  height: ${(props) => props.height};
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 `;
 
-const BucketContainer = styled.div`
+const BucketStyled = styled.div<BucketStyledProps>`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: 200px;
-  width: 250px;
+  height: ${(props) => props.height};
+  width: ${(props) => props.width};
   background: #e0e7f0;
   border-bottom-left-radius: 15px 15px;
   border-bottom-right-radius: 15px 15px;
@@ -29,28 +44,26 @@ const BucketFill = styled.div<BucketFillProps>`
   align-items: center;
   justify-content: center;
   background: #3fa7d6;
-  // animation: fill-${(props) => props.height} 0.5s ease-in forwards;
   border-bottom-left-radius: 15px 15px;
   border-bottom-right-radius: 15px 15px;
   color: #e0e7f0;
   transition: height 0.5s ease-in;
-  height: ${(props) => props.height}%;
+  height: ${(props) => props.height};
 `;
 
 const Bucket: React.FC<BucketProps> = (props) => {
-  const { size, fill } = props;
+  const { size, fill, height, width, containerHeight } = props;
 
-  const fillPercentage = Math.round((fill / size) * 100);
+  const fillHeight = `${Math.round((fill / size) * 100)}%`;
 
-  return (
-    <div>
-      <BucketSizeText>Size: {size} units</BucketSizeText>
-      <BucketContainer>
-        <BucketFill height={fillPercentage}>
-          {fill > 0 && `${fill} units`}
+  return (    
+    <BucketContainer height={containerHeight}>  
+      <BucketStyled height={height} width={width}>
+        <BucketFill height={fillHeight}>
+          {/* {fill > 0 && `${fill} unit(s)`} */}
         </BucketFill>
-      </BucketContainer>
-    </div>
+      </BucketStyled>
+    </BucketContainer>
   );
 };
 

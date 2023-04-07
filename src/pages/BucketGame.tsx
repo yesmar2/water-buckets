@@ -1,143 +1,163 @@
-import Bucket from '../components/Bucket';
-import styled from 'styled-components';
-import BucketButtons from '../components/BucketButtons';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { MdRefresh, MdHelpOutline } from 'react-icons/md';
+import BucketDetails from '../components/BucketDetails';
+import Header from '../components/Header';
+import HeaderIcon from '../components/HeaderIcon';
+import { getBucketHeights } from '../utils';
 
-interface BucketProperties {
-  size: number;
-  fill: number;
+interface BucketGameProps {
+  bucketOneSize: number;
+  bucketTwoSize: number;
+  targetUnits: number;
 }
 
-interface BucketObject {
-  [key: string]: BucketProperties;
-}
+const RefreshIcon = styled(MdRefresh)`
+  transform: scale(1.5);
+  cursor: pointer;
+`;
+
+const HelpIcon = styled(MdHelpOutline)`
+  transform: scale(1.5);
+  cursor: pointer;
+`;
+
+const BucketGameContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 40px);
+`;
 
 const BucketsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 1fr;
-  grid-column-gap: 24px;
+  grid-column-gap: 40px;
 `;
 
-const BucketButtonsContainer = styled.div`
-  margin-top: 12px;
-`;
+const WinnerAlert = styled.p`
+  color: #30da7b;
+  font-size: 24px;
+`
 
-const BUCKET_ONE_NAME = 'bucketOne';
-const BUCKET_TWO_NAME = 'bucketTwo';
+const TargetHeading = styled.h2`
+  margin: 0;
+`
 
-const BucketGame = () => {
-  const initialBucketData: BucketObject = {
-    [BUCKET_ONE_NAME]: { size: 5, fill: 0 },
-    [BUCKET_TWO_NAME]: { size: 3, fill: 0 },
-  };
+const StepsHeading = styled.h3`
+  margin: 0;
+`
 
+const BucketGame: React.FC<BucketGameProps> = (props) => {
+  const { bucketOneSize, bucketTwoSize, targetUnits } = props;
+  const { bucketOneHeight, bucketTwoHeight } = getBucketHeights(bucketOneSize, bucketTwoSize);
+ 
+  const [bucketOneFill, setBucketOneFill] = useState(0);
+  const [bucketTwoFill, setBucketTwoFill] = useState(0);
   const [steps, setSteps] = useState(0);
-  const [bucketData, setBucketData] = useState<BucketObject>(initialBucketData);
-  const { bucketOne, bucketTwo } = bucketData;
 
   const incrementStep = () => {
-    setSteps(prevState => prevState + 1);
+    setSteps((prevState) => prevState + 1);
+  };
+
+  const onFill = (bucketNumber: number) => {
+    incrementStep();
+    if (bucketNumber === 1) {
+      setBucketOneFill(bucketOneSize);
+    } else {
+      setBucketTwoFill(bucketTwoSize);
+    }
+  };
+
+  const onDump = (bucketNumber: number) => {
+    incrementStep();
+    if (bucketNumber === 1) {
+      setBucketOneFill(0);
+    } else {
+      setBucketTwoFill(0);
+    }
+  };
+
+  const onTransfer = (bucketNumber: number) => {
+    incrementStep();
+    let newBucketOneFill = 0;
+    let newBucketTwoFill = 0;
+    if (bucketNumber === 1) {
+      const bucketTwoSpaceRemaining = bucketTwoSize - bucketTwoFill;
+      if (bucketOneFill >= bucketTwoSpaceRemaining) {
+        newBucketOneFill = bucketOneFill - bucketTwoSpaceRemaining;
+        newBucketTwoFill = bucketTwoSize;
+      } else {
+        newBucketOneFill = 0;
+        newBucketTwoFill = bucketTwoFill + bucketOneFill;
+      }
+    } else {
+      const bucketOneSpaceRemaining = bucketOneSize - bucketOneFill;
+      if (bucketTwoFill >= bucketOneSpaceRemaining) {
+        newBucketTwoFill = bucketTwoFill - bucketOneSpaceRemaining;
+        newBucketOneFill = bucketOneSize;
+      } else {
+        newBucketTwoFill = 0;
+        newBucketOneFill = bucketOneFill + bucketTwoFill;
+      }
+    }
+
+    setBucketOneFill(newBucketOneFill);
+    setBucketTwoFill(newBucketTwoFill);
+  };
+
+  const resetGame = () => {
+    setBucketOneFill(0);
+    setBucketTwoFill(0);
+    setSteps(0);
   }
 
-  const onFill = (bucketName: string) => {
-    incrementStep();
-    setBucketData((prevData: BucketObject) => {
-      const bucketData = prevData[bucketName];
-      return {
-        ...prevData,
-        [bucketName]: {
-          ...bucketData,
-          fill: bucketData.size,
-        },
-      };
-    });
-  };
-
-  const onDump = (bucketName: string) => {
-    incrementStep();
-    setBucketData((prevData: BucketObject) => {
-      const bucketData = prevData[bucketName];
-      return {
-        ...prevData,
-        [bucketName]: {
-          ...bucketData,
-          fill: 0,
-        },
-      };
-    });
-  };
-
-  const onTransfer = (bucketName: string) => {
-    incrementStep();
-    setBucketData((prevData: BucketObject) => {
-      const { fill: prevBucketOneFill, size: prevBucketOneSize } = prevData[BUCKET_ONE_NAME];
-      const { fill: prevBucketTwoFill, size: prevBucketTwoSize } = prevData[BUCKET_TWO_NAME];
-
-      let newBucketOneFill = 0;
-      let newBucketTwoFill = 0;
-      if (bucketName === BUCKET_ONE_NAME) {
-        const bucketTwoSpaceRemaining = prevBucketTwoSize - prevBucketTwoFill;
-        if (prevBucketOneFill >= bucketTwoSpaceRemaining) {
-          newBucketOneFill = prevBucketOneFill - bucketTwoSpaceRemaining;
-          newBucketTwoFill = prevBucketTwoSize;
-        } else {
-          newBucketOneFill = 0;
-          newBucketTwoFill = prevBucketTwoFill + prevBucketOneFill;
-        }
-      } else {
-        const bucketOneSpaceRemaining = prevBucketOneSize - prevBucketOneFill;
-        if (prevBucketTwoFill >= bucketOneSpaceRemaining) {
-          newBucketTwoFill = prevBucketTwoFill - bucketOneSpaceRemaining;
-          newBucketOneFill = prevBucketOneSize;
-        } else {
-          newBucketTwoFill = 0;
-          newBucketOneFill = prevBucketOneFill + prevBucketTwoFill;
-        }
-      }
-      
-      return {
-        ...prevData,
-        [BUCKET_ONE_NAME]: {
-          ...prevData[BUCKET_ONE_NAME],
-          fill: newBucketOneFill,
-        },
-        [BUCKET_TWO_NAME]: {
-          ...prevData[BUCKET_TWO_NAME],
-          fill: newBucketTwoFill,
-        },
-      };
-    });
-  };
+  const gameWon = bucketOneFill === targetUnits || bucketTwoFill === targetUnits;
 
   return (
     <>
-      <h1>Goal: 4 units</h1>
-      <h2>Steps: {steps}</h2>
-      <BucketsContainer>
-        <div>
-          <Bucket size={bucketOne.size} fill={bucketOne.fill} />
-          <BucketButtonsContainer>
-            <BucketButtons
-              bucketName={BUCKET_ONE_NAME}
-              onFill={onFill}
-              onDump={onDump}
-              onTransfer={onTransfer}
-            />
-          </BucketButtonsContainer>
-        </div>
-        <div>
-          <Bucket size={bucketTwo.size} fill={bucketTwo.fill} />
-          <BucketButtonsContainer>
-            <BucketButtons
-              bucketName={BUCKET_TWO_NAME}
-              onFill={onFill}
-              onDump={onDump}
-              onTransfer={onTransfer}
-            />
-          </BucketButtonsContainer>
-        </div>
-      </BucketsContainer>
+      <Header title="Water Bucket Game">
+        <HeaderIcon>
+          <Link to={`/answer?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`}>
+            <HelpIcon />
+          </Link>
+        </HeaderIcon>
+        <HeaderIcon>
+          <RefreshIcon onClick={resetGame} />
+        </HeaderIcon>
+      </Header>
+      <BucketGameContainer>
+        {gameWon && (
+          <WinnerAlert>
+            Winner in {steps} step(s)!
+          </WinnerAlert>
+        )}
+        <TargetHeading>Target: {targetUnits} unit(s)</TargetHeading>
+        <StepsHeading>Steps: {steps}</StepsHeading>
+        <BucketsContainer>
+          <BucketDetails
+            bucketSize={bucketOneSize}
+            bucketFill={bucketOneFill}
+            bucketHeight={bucketOneHeight}
+            bucketNumber={1}
+            onFill={onFill}
+            onDump={onDump}
+            onTransfer={onTransfer}
+          />
+          <BucketDetails
+            bucketSize={bucketTwoSize}
+            bucketFill={bucketTwoFill}
+            bucketHeight={bucketTwoHeight}
+            bucketNumber={2}
+            onFill={onFill}
+            onDump={onDump}
+            onTransfer={onTransfer}
+          />
+        </BucketsContainer>
+      </BucketGameContainer>
     </>
   );
 };
