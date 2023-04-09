@@ -6,6 +6,7 @@ interface BucketProps {
   height: string;
   width: string;
   containerHeight: string;
+  showFill?: boolean;
 }
 
 interface BucketContainerProps {
@@ -52,7 +53,7 @@ const BucketFill = styled.div<BucketFillProps>`
 `;
 
 const Bucket: React.FC<BucketProps> = (props) => {
-  const { size, fill, height, width, containerHeight } = props;
+  const { size, fill, height, width, containerHeight, showFill } = props;
 
   const fillHeight = `${Math.round((fill / size) * 100)}%`;
 
@@ -60,11 +61,15 @@ const Bucket: React.FC<BucketProps> = (props) => {
     <BucketContainer height={containerHeight}>  
       <BucketStyled height={height} width={width}>
         <BucketFill height={fillHeight}>
-          {/* {fill > 0 && `${fill} unit(s)`} */}
+          {showFill && fill > 0 && `${fill} unit(s)`}
         </BucketFill>
       </BucketStyled>
     </BucketContainer>
   );
 };
+
+Bucket.defaultProps = {
+  showFill: false,
+}
 
 export default Bucket;

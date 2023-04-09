@@ -28,6 +28,7 @@ To Visit App:
 
 ## Future Improvments
 * Create api for calculating most efficient steps
+* More unit and integration tests
 * Responsive design
 * Add more unit and integration tests
 * Aliasing for imports
@@ -36,3 +37,4 @@ To Visit App:
 * Better error handling
 * Random valid bucket games instead of just the hardcoded 5, 3, and 4 game.
 * Better navigation
+* Add accessibility

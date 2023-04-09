@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Home from './pages/Home';
 import BucketGame from './pages/BucketGame';
 import BucketForm from './pages/BucketForm';
-import Answer from './pages/Answer';
+import Solution from './pages/Solution';
 import NotFound from './pages/NotFound';
 
 const AppContainer = styled.main`
@@ -24,9 +24,9 @@ const routes = [
     element: <BucketForm />,
   },
   {
-    key: 'answer',
-    path: '/answer',
-    element: <Answer />,
+    key: 'solution',
+    path: '/solution',
+    element: <Solution />,
   },
   {
     key: 'bucketGame',

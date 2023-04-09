@@ -5,7 +5,7 @@ import { MdRefresh, MdHelpOutline } from 'react-icons/md';
 import BucketDetails from '../components/BucketDetails';
 import Header from '../components/Header';
 import HeaderIcon from '../components/HeaderIcon';
-import { getBucketHeights } from '../utils';
+import { getBucketHeights } from '../utils/bucketUtils';
 
 interface BucketGameProps {
   bucketOneSize: number;
@@ -13,7 +13,7 @@ interface BucketGameProps {
   targetUnits: number;
 }
 
-const RefreshIcon = styled(MdRefresh)`
+const ResetIcon = styled(MdRefresh)`
   transform: scale(1.5);
   cursor: pointer;
 `;
@@ -121,12 +121,12 @@ const BucketGame: React.FC<BucketGameProps> = (props) => {
     <>
       <Header title="Water Bucket Game">
         <HeaderIcon>
-          <Link to={`/answer?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`}>
+          <Link to={`/solution?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`}>
             <HelpIcon />
           </Link>
         </HeaderIcon>
         <HeaderIcon>
-          <RefreshIcon onClick={resetGame} />
+          <ResetIcon onClick={resetGame} data-testid="resetIcon" />
         </HeaderIcon>
       </Header>
       <BucketGameContainer>

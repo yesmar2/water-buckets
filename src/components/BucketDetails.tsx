@@ -40,6 +40,7 @@ const BucketDetails: React.FC<BucketDetailsProps> = (props) => {
         width="150px"
         size={bucketSize}
         fill={bucketFill}
+        showFill
       />
       <BucketButtonsContainer>
         <BucketButtons

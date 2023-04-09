@@ -5,16 +5,16 @@ import { MdGames } from 'react-icons/md';
 import Bucket from '../components/Bucket';
 import Header from '../components/Header';
 import HeaderIcon from '../components/HeaderIcon';
-import { getBucketHeights, getMostEfficientSteps } from '../utils';
+import { getBucketHeights, getMostEfficientSteps } from '../utils/bucketUtils';
 
-const AnswerContainer = styled.div`
+const SolutionContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 48px 0;
 `;
 
-const AnswerTableHeader = styled.div`
+const SolutionTableHeader = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 600px;
@@ -22,7 +22,7 @@ const AnswerTableHeader = styled.div`
   padding: 0 16px;
 `;
 
-const AnswerTableHeaderText = styled.div`
+const SolutionTableHeaderText = styled.div`
   margin-left: 12px;
   width: 50px;
 `;
@@ -86,7 +86,7 @@ const BucketFill = styled.div`
   margin-bottom: 4px;
 `;
 
-const Answer = () => {
+const Solution = () => {
   const [searchParams] = useSearchParams();
   const bucketOneSize = parseInt(searchParams.get('bucketOneSize') ?? '0', 10);
   const bucketTwoSize = parseInt(searchParams.get('bucketTwoSize') ?? '0', 10);
@@ -97,11 +97,13 @@ const Answer = () => {
   );
 
   // Ideally we would be making an api call to retrieve this data in a useEffect
-  // Instead for this project we are memoizing the answer so it doesn't have
+  // Instead for this project we are memoizing the solution so it doesn't have
   // to recalculate everytime we re-render.
   const steps = useMemo(() => {
     return getMostEfficientSteps(bucketOneSize, bucketTwoSize, targetUnits);
   }, [bucketOneSize, bucketTwoSize, targetUnits]);
+
+  console.log(steps);
 
   const title = `Bucket 1 (${bucketOneSize} Units) - Bucket 2 (${bucketTwoSize} units) - Target (${targetUnits} units)`;
 
@@ -114,17 +116,17 @@ const Answer = () => {
           </Link>
         </HeaderIcon>
       </Header>
-      <AnswerContainer>
-        <AnswerTableHeader>
-          <AnswerTableHeaderText>
+      <SolutionContainer>
+        <SolutionTableHeader>
+          <SolutionTableHeaderText>
             <BucketText>Bucket 1</BucketText>
             <UnitsText>({bucketOneSize} units)</UnitsText>
-          </AnswerTableHeaderText>
-          <AnswerTableHeaderText>
+          </SolutionTableHeaderText>
+          <SolutionTableHeaderText>
             <BucketText>Bucket 2</BucketText>
             <UnitsText>({bucketTwoSize} units)</UnitsText>
-          </AnswerTableHeaderText>
-        </AnswerTableHeader>
+          </SolutionTableHeaderText>
+        </SolutionTableHeader>
         {steps.map((step, index) => {
           const { bucketOneFill, bucketTwoFill, description, error } = step;
           const stepNumber = index + 1;
@@ -159,9 +161,9 @@ const Answer = () => {
             </StepContainer>
           );
         })}
-      </AnswerContainer>
+      </SolutionContainer>
     </>
   );
 };
 
-export default Answer;
+export default Solution;
