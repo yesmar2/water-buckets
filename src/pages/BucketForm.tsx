@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { getMostEfficientSteps } from '../utils/bucketUtils';
 
 const BucketFormContainer = styled.div`
   display: flex;
@@ -25,6 +26,11 @@ const BucketFormButtonContainer = styled.div`
   width: 100%;
 `;
 
+const ErrorText = styled.p`
+  color: #ee6352;
+  margin: 0 0 12px;
+`;
+
 const InputStyled = styled(Input)`
   margin-bottom: 12px;
 `;
@@ -44,6 +50,7 @@ const TARGET_UNITS = 'targetUnits';
 
 const BucketForm: React.FC<{}> = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [inputField, setInputField] = useState({
@@ -60,14 +67,33 @@ const BucketForm: React.FC<{}> = () => {
     setButtonDisabled(!bucketOneSize || !bucketTwoSize || !targetUnits);
   }, [bucketOneSize, bucketTwoSize, targetUnits]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    navigate(
-      `/game?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`
+  const validInput = () => {
+    const efficientSteps = getMostEfficientSteps(
+      parseInt(bucketOneSize, 10),
+      parseInt(bucketTwoSize, 10),
+      parseInt(targetUnits, 10)
     );
+
+    if (efficientSteps[0].error) {
+      setError(efficientSteps[0].error);
+      return false;
+    }
+
+    return true;
+  }
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    if (validInput()) {
+      navigate(
+        `/game?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`
+      );
+    }
+
     event.preventDefault();
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setError('');
     setInputField((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
@@ -75,32 +101,38 @@ const BucketForm: React.FC<{}> = () => {
   };
 
   const goToSolution = () => {
-    navigate(
-      `/solution?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`
-    );
-  }
+    if (validInput()) {
+      navigate(
+        `/solution?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`
+      );
+    }
+  };
 
   return (
     <BucketFormContainer>
       <h1>Water Buckets</h1>
+      {error && <ErrorText>{error}</ErrorText>}
       <BucketFormStyled onSubmit={handleSubmit}>
         <InputStyled
           name={BUCKET_ONE_SIZE}
           placeholder="Bucket One Size"
           value={inputField[BUCKET_ONE_SIZE]}
           onChange={handleInputChange}
+          type="number"
         />
         <InputStyled
           name={BUCKET_TWO_SIZE}
           placeholder="Bucket Two Size"
           value={inputField[BUCKET_TWO_SIZE]}
           onChange={handleInputChange}
+          type="number"
         />
         <InputStyled
           name={TARGET_UNITS}
           placeholder="Number of Units"
           value={inputField[TARGET_UNITS]}
           onChange={handleInputChange}
+          type="number"
         />
         <BucketFormButtonContainer>
           <SolutionButton disabled={buttonDisabled} onClick={goToSolution}>
