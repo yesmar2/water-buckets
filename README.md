@@ -1,5 +1,9 @@
 # Water Buckets
 
+* Problem: Given a lake of water, an oddly shaped x unit container (A) and an oddly shaped y unit container (B), find the most efficient steps to get z units of water (C).
+* This project provides a form to enter number of units for two buckets (A, B) and a target (C).  You can either play a game to try and solve problem or have the application return the optimal solution.
+
+
 ## Installation and Setup Instructions
 
 Installation:
@@ -8,7 +12,7 @@ Installation:
 
 To Run Test Suite:  
 
-* Run `npm test`  
+* Run `npm run test`  
 
 To Start Server:
 
@@ -32,9 +36,6 @@ To Visit App:
 * Responsive design
 * Add more unit and integration tests
 * Aliasing for imports
-* Better styling for home page and form
-* Form validation
 * Better error handling
-* Random valid bucket games instead of just the hardcoded 5, 3, and 4 game.
-* Better navigation
+* Random bucket games.
 * Add accessibility

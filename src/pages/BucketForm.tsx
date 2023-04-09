@@ -52,7 +52,7 @@ const BucketForm: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
 
-  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [buttonsDisabled, setbuttonsDisabled] = useState(true);
   const [inputField, setInputField] = useState({
     [BUCKET_ONE_SIZE]: '',
     [BUCKET_TWO_SIZE]: '',
@@ -64,14 +64,22 @@ const BucketForm: React.FC<{}> = () => {
   const targetUnits = inputField[TARGET_UNITS];
 
   useEffect(() => {
-    setButtonDisabled(!bucketOneSize || !bucketTwoSize || !targetUnits);
+    setbuttonsDisabled(!bucketOneSize || !bucketTwoSize || !targetUnits);
   }, [bucketOneSize, bucketTwoSize, targetUnits]);
 
   const validInput = () => {
+    const bucketOneSizeInt = parseInt(bucketOneSize, 10);
+    const bucketTwoSizeInt = parseInt(bucketTwoSize, 10);
+    const targetUnitsInt = parseInt(targetUnits, 10);
+
+    if (bucketOneSizeInt >= 100 || bucketTwoSizeInt >= 100 || targetUnitsInt >= 100) {
+      setError('All inputs must be less than 100');
+      return false;
+    }
     const efficientSteps = getMostEfficientSteps(
-      parseInt(bucketOneSize, 10),
-      parseInt(bucketTwoSize, 10),
-      parseInt(targetUnits, 10)
+      bucketOneSizeInt,
+      bucketTwoSizeInt,
+      targetUnitsInt,
     );
 
     if (efficientSteps[0].error) {
@@ -135,10 +143,10 @@ const BucketForm: React.FC<{}> = () => {
           type="number"
         />
         <BucketFormButtonContainer>
-          <SolutionButton disabled={buttonDisabled} onClick={goToSolution}>
+          <SolutionButton disabled={buttonsDisabled} onClick={goToSolution}>
             Optimal Solution
           </SolutionButton>
-          <GameButton type="submit" disabled={buttonDisabled}>
+          <GameButton type="submit" disabled={buttonsDisabled}>
             Play Game
           </GameButton>
         </BucketFormButtonContainer>
