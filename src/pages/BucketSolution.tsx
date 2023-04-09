@@ -7,14 +7,14 @@ import Header from '../components/Header';
 import HeaderIcon from '../components/HeaderIcon';
 import { getBucketHeights, getMostEfficientSteps } from '../utils/bucketUtils';
 
-const SolutionContainer = styled.div`
+const BucketSolutionContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 48px 0;
 `;
 
-const SolutionTableHeader = styled.div`
+const BucketSolutionTableHeader = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 600px;
@@ -22,14 +22,9 @@ const SolutionTableHeader = styled.div`
   padding: 0 16px;
 `;
 
-const SolutionTableHeaderText = styled.div`
+const BucketSolutionTableHeaderText = styled.div`
   margin-left: 12px;
   width: 50px;
-`;
-
-const GameIcon = styled(MdGames)`
-  transform: scale(1.5);
-  cursor: pointer;
 `;
 
 const BucketText = styled.div`
@@ -86,7 +81,7 @@ const BucketFill = styled.div`
   margin-bottom: 4px;
 `;
 
-const Solution = () => {
+const BucketSolution: React.FC<{}> = () => {
   const [searchParams] = useSearchParams();
   const bucketOneSize = parseInt(searchParams.get('bucketOneSize') ?? '0', 10);
   const bucketTwoSize = parseInt(searchParams.get('bucketTwoSize') ?? '0', 10);
@@ -103,30 +98,28 @@ const Solution = () => {
     return getMostEfficientSteps(bucketOneSize, bucketTwoSize, targetUnits);
   }, [bucketOneSize, bucketTwoSize, targetUnits]);
 
-  console.log(steps);
-
   const title = `Bucket 1 (${bucketOneSize} Units) - Bucket 2 (${bucketTwoSize} units) - Target (${targetUnits} units)`;
 
   return (
     <>
       <Header title={title}>
         <HeaderIcon>
-          <Link to={`/game`}>
-            <GameIcon />
+          <Link to={`/game?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`}>
+            <MdGames />
           </Link>
         </HeaderIcon>
       </Header>
-      <SolutionContainer>
-        <SolutionTableHeader>
-          <SolutionTableHeaderText>
+      <BucketSolutionContainer>
+        <BucketSolutionTableHeader>
+          <BucketSolutionTableHeaderText>
             <BucketText>Bucket 1</BucketText>
             <UnitsText>({bucketOneSize} units)</UnitsText>
-          </SolutionTableHeaderText>
-          <SolutionTableHeaderText>
+          </BucketSolutionTableHeaderText>
+          <BucketSolutionTableHeaderText>
             <BucketText>Bucket 2</BucketText>
             <UnitsText>({bucketTwoSize} units)</UnitsText>
-          </SolutionTableHeaderText>
-        </SolutionTableHeader>
+          </BucketSolutionTableHeaderText>
+        </BucketSolutionTableHeader>
         {steps.map((step, index) => {
           const { bucketOneFill, bucketTwoFill, description, error } = step;
           const stepNumber = index + 1;
@@ -161,9 +154,9 @@ const Solution = () => {
             </StepContainer>
           );
         })}
-      </SolutionContainer>
+      </BucketSolutionContainer>
     </>
   );
 };
 
-export default Solution;
+export default BucketSolution;

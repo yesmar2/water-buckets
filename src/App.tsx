@@ -1,37 +1,30 @@
 import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
-import Home from './pages/Home';
 import BucketGame from './pages/BucketGame';
 import BucketForm from './pages/BucketForm';
-import Solution from './pages/Solution';
+import BucketSolution from './pages/BucketSolution';
 import NotFound from './pages/NotFound';
 
 const AppContainer = styled.main`
   display: flex;
   flex-direction: column;
-
 `;
 
 const routes = [
   {
-    key: 'home',
-    path: '/',
-    element: <Home />,
-  },
-  {
     key: 'bucketForm',
-    path: '/form',
+    path: '/',
     element: <BucketForm />,
   },
   {
-    key: 'solution',
+    key: 'bucketSolution',
     path: '/solution',
-    element: <Solution />,
+    element: <BucketSolution />,
   },
   {
     key: 'bucketGame',
     path: '/game',
-    element: <BucketGame bucketOneSize={5} bucketTwoSize={3} targetUnits={4} />,
+    element: <BucketGame />,
   },
   {
     key: 'notFound',

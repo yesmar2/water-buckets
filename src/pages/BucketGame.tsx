@@ -1,27 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { MdRefresh, MdHelpOutline } from 'react-icons/md';
 import BucketDetails from '../components/BucketDetails';
 import Header from '../components/Header';
 import HeaderIcon from '../components/HeaderIcon';
 import { getBucketHeights } from '../utils/bucketUtils';
-
-interface BucketGameProps {
-  bucketOneSize: number;
-  bucketTwoSize: number;
-  targetUnits: number;
-}
-
-const ResetIcon = styled(MdRefresh)`
-  transform: scale(1.5);
-  cursor: pointer;
-`;
-
-const HelpIcon = styled(MdHelpOutline)`
-  transform: scale(1.5);
-  cursor: pointer;
-`;
 
 const BucketGameContainer = styled.div`
   display: flex;
@@ -51,8 +35,11 @@ const StepsHeading = styled.h3`
   margin: 0;
 `
 
-const BucketGame: React.FC<BucketGameProps> = (props) => {
-  const { bucketOneSize, bucketTwoSize, targetUnits } = props;
+const BucketGame: React.FC<{}> = () => {
+  const [searchParams] = useSearchParams();
+  const bucketOneSize = parseInt(searchParams.get('bucketOneSize') ?? '0', 10);
+  const bucketTwoSize = parseInt(searchParams.get('bucketTwoSize') ?? '0', 10);
+  const targetUnits = parseInt(searchParams.get('targetUnits') ?? '0', 10);
   const { bucketOneHeight, bucketTwoHeight } = getBucketHeights(bucketOneSize, bucketTwoSize);
  
   const [bucketOneFill, setBucketOneFill] = useState(0);
@@ -122,11 +109,11 @@ const BucketGame: React.FC<BucketGameProps> = (props) => {
       <Header title="Water Bucket Game">
         <HeaderIcon>
           <Link to={`/solution?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`}>
-            <HelpIcon />
+            <MdHelpOutline />
           </Link>
         </HeaderIcon>
         <HeaderIcon>
-          <ResetIcon onClick={resetGame} data-testid="resetIcon" />
+          <MdRefresh onClick={resetGame} data-testid="resetIcon" />
         </HeaderIcon>
       </Header>
       <BucketGameContainer>

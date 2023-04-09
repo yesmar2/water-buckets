@@ -6,6 +6,7 @@ import Input from '../components/Input';
 
 const BucketFormContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -20,12 +21,21 @@ const BucketFormStyled = styled.form`
 
 const BucketFormButtonContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   width: 100%;
 `;
 
 const InputStyled = styled(Input)`
   margin-bottom: 12px;
+`;
+
+const SolutionButton = styled(Button)`
+  flex: 1;
+`;
+
+const GameButton = styled(Button)`
+  flex: 1;
+  margin-left: 12px;
 `;
 
 const BUCKET_ONE_SIZE = 'bucketOneSize';
@@ -52,7 +62,7 @@ const BucketForm: React.FC<{}> = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     navigate(
-      `/solution?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`
+      `/game?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`
     );
     event.preventDefault();
   };
@@ -64,8 +74,15 @@ const BucketForm: React.FC<{}> = () => {
     }));
   };
 
+  const goToSolution = () => {
+    navigate(
+      `/solution?bucketOneSize=${bucketOneSize}&bucketTwoSize=${bucketTwoSize}&targetUnits=${targetUnits}`
+    );
+  }
+
   return (
     <BucketFormContainer>
+      <h1>Water Buckets</h1>
       <BucketFormStyled onSubmit={handleSubmit}>
         <InputStyled
           name={BUCKET_ONE_SIZE}
@@ -86,9 +103,12 @@ const BucketForm: React.FC<{}> = () => {
           onChange={handleInputChange}
         />
         <BucketFormButtonContainer>
-          <Button type="submit" disabled={buttonDisabled}>
-            Submit
-          </Button>
+          <SolutionButton disabled={buttonDisabled} onClick={goToSolution}>
+            Optimal Solution
+          </SolutionButton>
+          <GameButton type="submit" disabled={buttonDisabled}>
+            Play Game
+          </GameButton>
         </BucketFormButtonContainer>
       </BucketFormStyled>
     </BucketFormContainer>

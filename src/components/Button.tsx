@@ -16,6 +16,11 @@ const ButtonStyled = styled.button`
   -webkit-font-smoothing: inherit;
   -moz-osx-font-smoothing: inherit;
   -webkit-appearance: none;
+
+  &:disabled {
+    color: #B6BDC7;
+    border: 1px solid #B6BDC7;
+  }
 `;
 
 interface ButtonProps {
@@ -23,13 +28,19 @@ interface ButtonProps {
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
+  className?: string;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
-  const { type, children, onClick, disabled } = props;
+  const { type, children, onClick, disabled, className } = props;
 
   return (
-    <ButtonStyled type={type} onClick={onClick} disabled={disabled}>
+    <ButtonStyled
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={className}
+    >
       {children}
     </ButtonStyled>
   );

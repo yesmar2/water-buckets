@@ -1,5 +1,9 @@
-import styled from 'styled-components';
 import { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components'
+import { MdHome } from 'react-icons/md';
+import HeaderIcon from './HeaderIcon';
+;
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -27,7 +31,14 @@ const Header = ({ title, children }: HeaderProps) => {
   return (
     <HeaderContainer>
       <HeaderTitle>{title}</HeaderTitle>
-      <HeaderIcons>{children}</HeaderIcons>
+      <HeaderIcons>
+        {children}
+        <HeaderIcon>
+          <Link to="/">
+            <MdHome />
+          </Link>
+        </HeaderIcon>
+      </HeaderIcons>
     </HeaderContainer>
   );
 };
