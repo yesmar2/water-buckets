@@ -32,7 +32,6 @@ To Visit App:
 
 ## Future Improvments
 * Create api for calculating most efficient steps
-* More unit and integration tests
 * Responsive design
 * Add more unit and integration tests
 * Aliasing for imports
